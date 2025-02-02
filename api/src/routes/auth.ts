@@ -9,6 +9,9 @@ import { hash, verify } from "@node-rs/argon2";
 import { lucia } from "../db/auth";
 import type { Context } from "../lib/context.js";
 
+import { githubAuth } from "../db/auth"; // Import GitHub OAuth from db/auth.ts
+
+
 const authRoutes = new Hono<Context>();
 
 // Recommended minimum parameters for Argon2 hashing
@@ -18,6 +21,56 @@ const hashOptions = {
   outputLen: 32,
   parallelism: 1,
 }
+
+
+// FOR OAUTH // 
+
+// Step 1: Redirect user to GitHub OAuth login
+authRoutes.get("/auth/github", async (c) => {
+  const authUrl = await githubAuth.getAuthorizationUrl();
+  return c.redirect(authUrl.toString()); // Redirect user to GitHub login page
+});
+
+// Step 2: Handle GitHub OAuth callback
+authRoutes.get("/auth/github/callback", async (c) => {
+  const code = c.req.query("code");
+  if (!code) {
+    throw new HTTPException(400, { message: "OAuth code missing" });
+  }
+
+  // Exchange code for access token
+  const tokens = await githubAuth.validateAuthorizationCode(code);
+  const userInfo = await githubAuth.getUserInfo(tokens.accessToken);
+
+  let user = await db
+    .select()
+    .from(users)
+    .where(eq(users.username, userInfo.login))
+    .get();
+
+  if (!user) {
+    // Create a new user if they don’t exist
+    user = await db
+      .insert(users)
+      .values({
+        name: userInfo.name || userInfo.login,
+        username: userInfo.login,
+        password: "", // No password for OAuth users, but setting it to null is problematic because schema.ts 
+        // specifies password.notNull() so it can't be null
+      })
+      .returning()
+      .get();
+  }
+
+  // Create session for the user
+  const session = await lucia.createSession(user.id, {});
+  const cookie = lucia.createSessionCookie(session.id);
+  c.header("Set-Cookie", cookie.serialize(), { append: true });
+
+  return c.json({ message: "OAuth login successful", user });
+});
+
+// END OAUTH //
 
 authRoutes.post("/sign-in", 
   zValidator("json", signInSchema),
