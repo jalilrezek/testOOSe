@@ -25,14 +25,13 @@ export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   username: text("username").notNull().unique(),
-  password: text("password"), // ✅ Allow null for OAuth users
+  password: text("password").notNull(),
 });
 
 export const sessions = sqliteTable("sessions", {
-  id: text("id").primaryKey(), // ✅ Keep as text (UUID)
+  id: text("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expiresAt: integer("expires_at").notNull(),
-  // ✅ Fix: Lucia expects an integer timestamp for expiration
 });

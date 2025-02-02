@@ -67,6 +67,16 @@ const Login = () => {
           </Button>
         </div>
       </form>
+      
+      {/* ✅ Add GitHub OAuth Login Button */}
+      <div className="text-center">
+        <a
+          href="http://localhost:3000/auth/github" // ✅ Replace with actual backend URL
+          className="block w-full text-center text-white bg-black hover:bg-gray-800 font-medium py-2 px-4 rounded"
+        >
+          Sign in with GitHub
+        </a>
+      </div>
     </div>
   );
 };

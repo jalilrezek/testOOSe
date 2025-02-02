@@ -23,7 +23,7 @@ export const lucia = new Lucia(adapter, {
 export const githubAuth = new GitHub(
   process.env.GITHUB_CLIENT_ID!,
   process.env.GITHUB_CLIENT_SECRET!,
-  process.env.GITHUB_REDIRECT_URI! // Ensure this is set in .env (e.g., http://localhost:3000/auth/github/callback)
+  null // This is the optional redirect URI, we will handle it manually later
 );
 
 declare module "lucia" {

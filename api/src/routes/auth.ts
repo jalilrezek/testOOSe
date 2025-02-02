@@ -9,8 +9,9 @@ import { hash, verify } from "@node-rs/argon2";
 import { lucia } from "../db/auth";
 import type { Context } from "../lib/context.js";
 
-import { githubAuth } from "../db/auth"; // Import GitHub OAuth from db/auth.ts
-
+// 🔹 Import Arctic GitHub OAuth
+import { generateState } from "arctic";
+import { githubAuth } from "../db/auth";
 
 const authRoutes = new Hono<Context>();
 
@@ -25,49 +26,84 @@ const hashOptions = {
 
 // FOR OAUTH // 
 
-// Step 1: Redirect user to GitHub OAuth login
+
+/* ✅ STEP 1: Redirect user to GitHub OAuth login */
 authRoutes.get("/auth/github", async (c) => {
-  const authUrl = await githubAuth.getAuthorizationUrl();
-  return c.redirect(authUrl.toString()); // Redirect user to GitHub login page
+  const state = generateState();
+  const authUrl = githubAuth.createAuthorizationURL(state, []);
+
+  // ✅ Use `Set-Cookie` header instead of `c.cookie()`
+  c.header(
+    "Set-Cookie",
+    `github_oauth_state=${state}; Path=/; HttpOnly; Secure=${process.env.NODE_ENV === "production"}; Max-Age=600; SameSite=Lax`
+  );
+
+  return c.redirect(authUrl.toString());
 });
 
-// Step 2: Handle GitHub OAuth callback
+/* ✅ STEP 2: Handle GitHub OAuth callback */
 authRoutes.get("/auth/github/callback", async (c) => {
   const code = c.req.query("code");
-  if (!code) {
-    throw new HTTPException(400, { message: "OAuth code missing" });
+  const state = c.req.query("state");
+
+  if (!code || !state) {
+    throw new HTTPException(400, { message: "OAuth code or state missing" });
   }
 
-  // Exchange code for access token
-  const tokens = await githubAuth.validateAuthorizationCode(code);
-  const userInfo = await githubAuth.getUserInfo(tokens.accessToken);
+  // Manually parse cookies from request header
+  const cookieHeader = c.req.header("Cookie") || "";
+  const cookies = Object.fromEntries(
+    cookieHeader
+      .split("; ")
+      .map((c) => c.split("=").map(decodeURIComponent))
+  );
+  const storedState = cookies["github_oauth_state"];
 
-  let user = await db
-    .select()
-    .from(users)
-    .where(eq(users.username, userInfo.login))
-    .get();
-
-  if (!user) {
-    // Create a new user if they don’t exist
-    user = await db
-      .insert(users)
-      .values({
-        name: userInfo.name || userInfo.login,
-        username: userInfo.login,
-        password: "", // No password for OAuth users, but setting it to null is problematic because schema.ts 
-        // specifies password.notNull() so it can't be null
-      })
-      .returning()
-      .get();
+  if (state !== storedState) {
+    throw new HTTPException(400, { message: "Invalid OAuth state" });
   }
 
-  // Create session for the user
-  const session = await lucia.createSession(user.id, {});
-  const cookie = lucia.createSessionCookie(session.id);
-  c.header("Set-Cookie", cookie.serialize(), { append: true });
+  try {
+    // Exchange code for tokens
+    const tokens = await githubAuth.validateAuthorizationCode(code);
 
-  return c.json({ message: "OAuth login successful", user });
+    // Fetch user data from GitHub API
+    const githubUserResponse = await fetch("https://api.github.com/user", {
+      headers: { Authorization: `Bearer ${tokens.accessToken()}` },
+    });
+    const githubUser = await githubUserResponse.json();
+
+    if (!githubUser.id || !githubUser.login) {
+      throw new HTTPException(400, { message: "GitHub user info missing" });
+    }
+
+    // Check if user exists
+    let user = await db.select().from(users).where(eq(users.username, githubUser.login)).get();
+
+    if (!user) {
+      // Create new user if they don't exist
+      user = await db
+        .insert(users)
+        .values({
+          name: githubUser.name || githubUser.login,
+          username: githubUser.login,
+          password: "", // ✅ Allow null passwords for OAuth users, or just set it to "". Hopefully both work.
+        })
+        .returning()
+        .get();
+    }
+
+    // Create session for the user using Lucia
+    const session = await lucia.createSession(user.id, {});
+    const cookie = lucia.createSessionCookie(session.id);
+    c.header("Set-Cookie", cookie.serialize(), { append: true });
+
+    return c.redirect("http://localhost:5173/");
+    
+  } catch (error) {
+    console.error("OAuth callback error:", error);
+    throw new HTTPException(500, { message: "OAuth login failed" });
+  }
 });
 
 // END OAUTH //
