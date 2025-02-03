@@ -51,6 +51,7 @@ postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
     db
       .select({
         id: posts.id,
+        title: posts.title,
         content: posts.content,
         date: posts.date,
         author: { // author field of the current post
@@ -88,6 +89,7 @@ postRoutes.get("/posts/:id", zValidator("param", getPostSchema), async (c) => {
   const post = await db
     .select({
       id: posts.id,
+      title: posts.title,
       content: posts.content,
       date: posts.date,
       author: {
@@ -143,12 +145,13 @@ postRoutes.post(
   authGuard,
   zValidator("json", createPostSchema),
   async (c) => {
-    const { content } = c.req.valid("json");
+    const { title, content } = c.req.valid("json");
     const user = c.get("user");
 
     const newPost = await db
       .insert(posts)
       .values({
+        title,
         content,
         date: new Date(),
         userId: user!.id,
@@ -168,7 +171,7 @@ postRoutes.patch(
   zValidator("json", updatePostSchema),
   async (c) => {
     const { id } = c.req.valid("param");
-    const { content } = c.req.valid("json");
+    const { title, content } = c.req.valid("json"); // ✅ Validate title
     const user = c.get("user");
 
     const post = await db.select().from(posts).where(eq(posts.id, id)).get();
@@ -185,7 +188,7 @@ postRoutes.patch(
 
     const updatedPost = await db
       .update(posts)
-      .set({ content })
+      .set({ title, content })
       .where(eq(posts.id, id))
       .returning()
       .get();
