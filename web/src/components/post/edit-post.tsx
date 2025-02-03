@@ -61,7 +61,7 @@ const EditPost = ({
 
   return (
     <form className="grid w-full gap-1.5 p-4 border-b">
-      <Label htmlFor="content">Edit your post</Label>
+      <Label htmlFor="content">Edit your note</Label>
       <Textarea
         id="content"
         placeholder="Type your post here."
@@ -74,7 +74,7 @@ const EditPost = ({
           Cancel
         </Button>
         <Button type="submit" onClick={handleSave}>
-          Post
+          Add Note
         </Button>
       </div>
     </form>

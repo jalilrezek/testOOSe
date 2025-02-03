@@ -27,7 +27,7 @@ const DeletePostDialog = ({ postId }: { postId: string }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your post
+            This action cannot be undone. This will permanently delete your note
             and remove it from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>

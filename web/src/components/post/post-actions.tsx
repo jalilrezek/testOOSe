@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PostType } from "@/data/types";
-import { Pencil2Icon, ChatBubbleIcon } from "@radix-ui/react-icons";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import DeletePostDialog from "./delete-post-dialog";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/lib/router";
@@ -34,9 +34,6 @@ const PostActions = ({
 
   return (
     <div className="flex justify-end">
-      <Button variant={"ghost"} size={"icon"} onClick={navigateToCommentsView}>
-        <ChatBubbleIcon className="w-4 h-4" />
-      </Button>
       {showAction && (
         <Button
           variant={"ghost"}

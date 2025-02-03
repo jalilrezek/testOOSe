@@ -17,7 +17,7 @@ const Header = () => {
     if (page?.route === "post") {
       setLabel("Comments");
     } else {
-      setLabel("Posts");
+      setLabel("Notes");
     }
   }, [page]);
 

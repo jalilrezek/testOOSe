@@ -1,29 +1,53 @@
-# Posts - A Simplified Social Media Platform
+# Name of the app 
 
-Posts is a minimalistic clone of <https://posts.cv/>, which is itself a simplified and scaled-down alternative to Twitter. We built this clone solely for educational purposes.
+This repository contains a full-stack web application built with modern web technologies. Below, you'll find instructions on how to set up and run the application in a local development environment, along with an overview of the tech stack used.
 
-## Run locally
+## Installing / Getting started
 
-1. Clone this repository.
+Ensure you have the following installed on your system:
 
-2. Navigate to the project directory.
+Node.js (LTS recommended)
 
-3. To run the server API:
+pnpm (package manager)
 
-   1. Navigate to the `api` directory.
-   2. Install the dependencies by running `pnpm install`.
-   3. Create the database with `pnpm db:push`.
-   4. Seed the database with `pnpm db:seed`.
-   5. Run the server with `pnpm dev`. This will start the server on `http://localhost:3000`.
+Installation & Running the App
 
-4. To run the application:
+Backend (API)
 
-   1. Navigate to the `web` directory.
-   2. Add a `.env` file to `web` directory with the following content:
+Navigate to the api directory:
 
-        ```bash
-        VITE_API_URL=http://localhost:3000
-        ```
+cd api
 
-   3. Install the dependencies by running `pnpm install`.
-   4. Run the application with `pnpm run dev`. This will start the application on `http://localhost:5173`.
+Install dependencies:
+
+pnpm install
+
+Start the backend server:
+
+pnpm run dev
+
+The API will be running at http://localhost:3000/
+
+Frontend (Web)
+
+Open a new terminal and navigate to the web directory:
+
+cd web
+
+Install dependencies:
+
+pnpm install
+
+Start the frontend development server:
+
+pnpm run dev
+
+The frontend will be running at http://localhost:5173/.
+
+
+
+## Developing
+
+Go to api and run pnpm install followed by pnpm run dev. Then go to the web folder and do pnpm run dev.
+
+
