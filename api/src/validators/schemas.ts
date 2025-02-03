@@ -13,6 +13,10 @@ export const signUpSchema = z.object({
 });
 
 export const createPostSchema = z.object({
+  title: z
+    .string()
+    .min(1, "title required")
+    .max(100, "title must be <= 100 chars"),
   content: z
     .string()
     .min(1, "Content is required")

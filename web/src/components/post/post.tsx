@@ -28,6 +28,8 @@ const Post = ({ post }: { post: PostType }) => {
         </div>
         <PostActions post={post} setIsEditing={setIsEditing} />
       </div>
+      {/* ✅ Added title */}
+      <h3 className="text-lg font-semibold p-4">{post.title}</h3>
       <p className="p-4">{post.content}</p>
     </div>
   );

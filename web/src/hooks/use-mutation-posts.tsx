@@ -21,9 +21,10 @@ function useMutationPosts() {
     }
   };
 
-  const addNewPost = async (content: string) => {
+  // ✅ Added `title` field when creating a post
+  const addNewPost = async (title: string, content: string) => {
     try {
-      const newPost = await createPost(content);
+      const newPost = await createPost({ title, content });
       newPost.author = user;
       addPost(newPost);
     } catch (error) {
@@ -37,10 +38,11 @@ function useMutationPosts() {
     }
   };
 
-  const updatePost = async (postId: string, content: string) => {
+  // ✅ Added `title` field when updating a post
+  const updatePost = async (postId: string, title: string, content: string) => {
     try {
-      const updatedPost = await editPost(postId, content);
-      updatePostContent(updatedPost.id, updatedPost.content);
+      const updatedPost = await editPost(postId, title, content);
+      updatePostContent(updatedPost.id, updatedPost.title, updatedPost.content);
     } catch (error) {
       const errorMessage =
         (error as Error).message ?? "Please try again later!";

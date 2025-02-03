@@ -39,16 +39,17 @@ export function removePost(id: string) {
   $posts.set($posts.get().filter((post) => post.id !== id));
 }
 
-export function updatePostContent(id: string, content: string) {
+export function updatePostContent(id: string, title: string, content: string) {
   $posts.set(
     $posts.get().map((post) => {
       if (post.id === id) {
-        return { ...post, content: content };
+        return { ...post, title: title, content: content };
       }
       return post;
     }),
   );
 }
+
 
 export const $comments = atom<CommentType[]>([]);
 export const $currentCommentPage = atom(1);

@@ -31,14 +31,18 @@ export const deletePost = async (id: string): Promise<boolean> => {
   return true;
 };
 
-// Create a post
-export const createPost = async (content: string): Promise<PostType> => {
+// ✅ Create a post (Added `title` to request)
+export const createPost = async ({
+  title,
+  content,
+}: {
+  title: string;
+  content: string;
+}): Promise<PostType> => {
   const response = await fetch(`${API_URL}/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content,
-    }),
+    body: JSON.stringify({ title, content }), // ✅ Include title
     credentials: "include",
   });
   if (!response.ok) {
@@ -48,15 +52,16 @@ export const createPost = async (content: string): Promise<PostType> => {
   return data;
 };
 
-// Edit a post
+// ✅ Edit a post (Added `title` to request)
 export const editPost = async (
   id: string,
+  title: string,
   content: string,
 ): Promise<PostType> => {
   const response = await fetch(`${API_URL}/posts/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({ title, content }), // ✅ Include title
     credentials: "include",
   });
   if (!response.ok) {
