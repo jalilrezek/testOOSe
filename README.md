@@ -2,52 +2,31 @@
 
 This repository contains a full-stack web application built with modern web technologies. Below, you'll find instructions on how to set up and run the application in a local development environment, along with an overview of the tech stack used.
 
-## Installing / Getting started
 
-Ensure you have the following installed on your system:
+## Run locally
 
-Node.js (LTS recommended)
+1. Clone this repository.
 
-pnpm (package manager)
+2. Navigate to the project directory.
 
-Installation & Running the App
+3. To run the server API:
 
-Backend (API)
+   1. Navigate to the `api` directory.
+   2. Install the dependencies by running `pnpm install`.
+   3. Create the database with `pnpm db:push`.
+   4. Seed the database with `pnpm db:seed`.
+   5. Run the server with `pnpm dev`. This will start the server on `http://localhost:3000`.
 
-Navigate to the api directory:
+4. To run the application:
 
-cd api
+   1. Navigate to the `web` directory.
+   2. Add a `.env` file to `web` directory with the following content:
 
-Install dependencies:
+        ```bash
+        VITE_API_URL=http://localhost:3000
+        ```
 
-pnpm install
-
-Start the backend server:
-
-pnpm run dev
-
-The API will be running at http://localhost:3000/
-
-Frontend (Web)
-
-Open a new terminal and navigate to the web directory:
-
-cd web
-
-Install dependencies:
-
-pnpm install
-
-Start the frontend development server:
-
-pnpm run dev
-
-The frontend will be running at http://localhost:5173/.
-
-
-
-## Developing
-
-Go to api and run pnpm install followed by pnpm run dev. Then go to the web folder and do pnpm run dev.
+   3. Install the dependencies by running `pnpm install`.
+   4. Run the application with `pnpm run dev`. This will start the application on `http://localhost:5173`.
 
 
