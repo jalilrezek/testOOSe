@@ -1,41 +1,29 @@
-commit c6309affc73d9f84f25bd9fef89ddbacbd58a14f
-Author: jalilrezek <jalilrezek27@gmail.com>
-Date:   Sun Feb 9 21:33:57 2025 -0500
-
-    search functionality works but search separately for title & content which gives more control but is less intuitive since if you want to search among both title and content you have to put the same thing in both fields
-
-commit 33881a76d3c3c393a63629fe27df9e48ca5f2be6
-Author: jalilrezek <jalilrezek27@gmail.com>
-Date:   Sun Feb 9 19:49:38 2025 -0500
-
-    the basic popup for search functionality is working. Need to implement search.
-
 commit 31a76b2aa29b313210422b5ad6cb66ccafda0f13
 Author: jalilrezek <jalilrezek27@gmail.com>
 Date:   Sun Feb 2 23:20:37 2025 -0500
 
     minor fix on README but it is still not in the format given in the HW
 
-commit 7a5a9f094e257ac0ee789809453e192cdfb77775
-Author: jalilrezek <jalilrezek27@gmail.com>
+commit 7a5a9f094e257ac0ee789809453e192cdfb77775 // How to run: do pnpm db:push then pnpm db:seed for db; or for db, do pnpm db:generate, pnpm db:migrate, pnpm db:seed. (all 3)
+Author: jalilrezek <jalilrezek27@gmail.com>     // functionalities working. Titles present.
 Date:   Sun Feb 2 23:04:53 2025 -0500
 
     final
 
-commit 068bf22263d65ef555f403bef585a195402f3924
+commit 068bf22263d65ef555f403bef585a195402f3924 // can make db if you do GENERATE-->MIGRATE-->SEED, not if missing migrate. However, cannot add posts.
 Author: jalilrezek <jalilrezek27@gmail.com>
 Date:   Sun Feb 2 20:05:23 2025 -0500
 
     now they have titles.
 
-commit 08a5c12f921ef2d72e92d0e3ead8c516f5af06d5
+commit 08a5c12f921ef2d72e92d0e3ead8c516f5af06d5 // pnpm db:generate & db:migrate work, but db:seed fails because NOTNULL constraint fails.
 Author: jalilrezek <jalilrezek27@gmail.com>
 Date:   Sun Feb 2 19:44:04 2025 -0500
 
     just implemented changes to add title, but didn't clean out the db yet just in case. About to.
 
-commit c8446fb3f57d1db7de6d423c45dbff31b2b12734
-Author: jalilrezek <jalilrezek27@gmail.com>
+commit c8446fb3f57d1db7de6d423c45dbff31b2b12734 // FUNCTIONALITIES WORK (except OAuth which I never got to work). Missing titles. Comments field still present & other issues.
+Author: jalilrezek <jalilrezek27@gmail.com>     // How to run: do pnpm db:push then pnpm db:seed for db; or for db, do pnpm db:generate, pnpm db:migrate, pnpm db:seed. (all 3)
 Date:   Sun Feb 2 17:16:03 2025 -0500
 
     got to the github sign in page and signed in successfully one time, then it took me to a JSON text. Also, it stopped working for subsequent attempts, perhaps cuz frontend wasn't updated. Trying to fix that now

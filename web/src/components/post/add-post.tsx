@@ -24,7 +24,7 @@ const AddPost = () => {
       toast({
         variant: "destructive",
         title: "Sorry! Title and content cannot be empty! 🙁",
-        description: `Please enter both a title and the content of your post.`,
+        description: `Please enter both a title and the content of your note.`,
       });
     } else {
       await addNewPost(title, content); // ✅ Pass title to mutation
@@ -56,14 +56,14 @@ const AddPost = () => {
       </Label>
       <Input
         id="title"
-        placeholder="Enter a title for your post"
+        placeholder="Enter a title for your note"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
       {/* ✅ Content Input */}
       <Label htmlFor="content" className="text-sm">
-        Your post
+        Your note
       </Label>
       <Textarea
         id="content"
@@ -78,7 +78,7 @@ const AddPost = () => {
           Cancel
         </Button>
         <Button type="submit" onClick={handleSave}>
-          Post
+          Add Note
         </Button>
       </div>
     </form>
