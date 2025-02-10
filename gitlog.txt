@@ -1,0 +1,72 @@
+commit 31a76b2aa29b313210422b5ad6cb66ccafda0f13
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 23:20:37 2025 -0500
+
+    minor fix on README but it is still not in the format given in the HW
+
+commit 7a5a9f094e257ac0ee789809453e192cdfb77775 // How to run: do pnpm db:push then pnpm db:seed for db; or for db, do pnpm db:generate, pnpm db:migrate, pnpm db:seed. (all 3)
+Author: jalilrezek <jalilrezek27@gmail.com>     // functionalities working. Titles present.
+Date:   Sun Feb 2 23:04:53 2025 -0500
+
+    final
+
+commit 068bf22263d65ef555f403bef585a195402f3924 // can make db if you do GENERATE-->MIGRATE-->SEED, not if missing migrate. However, cannot add posts.
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 20:05:23 2025 -0500
+
+    now they have titles.
+
+commit 08a5c12f921ef2d72e92d0e3ead8c516f5af06d5 // pnpm db:generate & db:migrate work, but db:seed fails because NOTNULL constraint fails.
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 19:44:04 2025 -0500
+
+    just implemented changes to add title, but didn't clean out the db yet just in case. About to.
+
+commit c8446fb3f57d1db7de6d423c45dbff31b2b12734 // FUNCTIONALITIES WORK (except OAuth which I never got to work). Missing titles. Comments field still present & other issues.
+Author: jalilrezek <jalilrezek27@gmail.com>     // How to run: do pnpm db:push then pnpm db:seed for db; or for db, do pnpm db:generate, pnpm db:migrate, pnpm db:seed. (all 3)
+Date:   Sun Feb 2 17:16:03 2025 -0500
+
+    got to the github sign in page and signed in successfully one time, then it took me to a JSON text. Also, it stopped working for subsequent attempts, perhaps cuz frontend wasn't updated. Trying to fix that now
+
+commit 67b26a04297e3df643583269379029811989d089
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 16:37:23 2025 -0500
+
+    Using Arctic for OAuth as Lucia tutorial for Github says. Modified db/auth and schema.ts. sessions field in db/auth is giving an error, but I can now run the backend server & the frontend works, except the link to github sign in page still doesn't work.
+
+commit 82e8ff54981293e9e3014d658e4d9d3372ca44e9
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 15:52:30 2025 -0500
+
+    implemented ChatGPT changes to set up OAuth (modified db/auth, routes/auth, made env file, added env to server.ts, modified frontend to include github signin button) -- and also tried messing with installed dependencies to get compatibility, but failed so about to remove node modules from backend and other hard removals. NOT FUNCTIONAL YET, cuz cannot set up the backend yet.
+
+commit 0f31ae919c8053c72a630641a15a1630a2f1349f
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 12:08:14 2025 -0500
+
+    check if user.id is empty in feed.tsx (r
+    epresents being logged out, check out defautUser in store) if user id is empty then display the sign in to make notes message
+
+commit 26fc0f2a07ee7623d6a82f302df24c005137c910
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 11:46:31 2025 -0500
+
+    updated use-query-posts. No longer uses enableFilter. useEffect() is now dependent on [user] to trigger refresh if sign in state changes, so don't see notes of prevoius user upon signing out
+
+commit 860e7b3a0beedf7a9127abb5970643dbf85ff78f
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 11:10:10 2025 -0500
+
+    removed the all posts button from header. Adding, deleting, editing posts seems to work. Didn't test comments
+
+commit c99ac997fe609d9cab1994955451222a8801db64
+Author: jalilrezek <jalilrezek27@gmail.com>
+Date:   Sun Feb 2 10:15:36 2025 -0500
+
+    modified only the posts GET route to return empty list if no user is signed in. Works
+
+commit 91c9d2ad05e36358bba853f5fe3520c714f024d0
+Author: Ryan Nguyen <rnguye14@jh.edu>
+Date:   Thu Dec 5 17:38:25 2024 -0500
+
+    copied over from private repo

@@ -9,8 +9,10 @@ import { useStore } from "@nanostores/react";
 import {
   $showAddPost,
   $showAddComment,
+  $showSearchNote,
   toggleAddPost,
   toggleAddComment,
+  toggleSearchNote,
 } from "@/lib/store";
 import { $router } from "@/lib/router";
 import { openPage } from "@nanostores/router";
@@ -21,6 +23,7 @@ const Sidebar = () => {
   const page = useStore($router);
   const showAddPost = useStore($showAddPost);
   const showAddComment = useStore($showAddComment);
+  const showSearchNote = useStore($showSearchNote);
   const { user } = useAuth();
 
   const authGuard = () => {
@@ -54,6 +57,20 @@ const Sidebar = () => {
       <Button aria-label={"Search"} variant="ghost" size="icon">
         <MagnifyingGlassIcon className="w-5 h-5" />
       </Button>
+
+      {page.route === "home" && !showSearchNote && (
+        <Button
+          aria-label={"Search"}
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            authGuard() && toggleSearchNote();
+          }}
+        >
+          <MagnifyingGlassIcon className="w-5 h-5" />
+        </Button>
+      )}
+
       {page.route === "home" && !showAddPost && (
         <Button
           aria-label={"Make a Post"}

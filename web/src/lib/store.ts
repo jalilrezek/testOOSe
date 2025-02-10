@@ -5,6 +5,12 @@ import type { CommentType, PostType, UserType } from "@/data/types";
 
 const DEBUG = false;
 
+export const $showSearchNote = atom(false);
+
+export function toggleSearchNote() {
+  $showSearchNote.set(!$showSearchNote.get());
+}
+
 export const $showAddPost = atom(false);
 
 export function toggleAddPost() {

@@ -1,7 +1,8 @@
 import Header from "./header";
 import { useStore } from "@nanostores/react";
-import { $showAddPost, $showAddComment } from "@/lib/store";
+import { $showAddPost, $showAddComment, $showSearchNote } from "@/lib/store";
 import AddPost from "../post/add-post";
+import SearchNote from "../post/search-notes";
 import Posts from "../post/posts";
 import AddComment from "../comment/add-comment";
 import Comments from "../comment/comments";
@@ -12,6 +13,7 @@ import useAuth from "@/hooks/use-auth";
 const Feed = ({ postId }: { postId?: string }) => {
   const showNewPostEditor = useStore($showAddPost);
   const showNewCommentEditor = useStore($showAddComment);
+  const showSearchNoteEditor = useStore($showSearchNote);
   const { user } = useAuth();
 
 
@@ -24,17 +26,20 @@ const Feed = ({ postId }: { postId?: string }) => {
   if (!user.id) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
-        <h2 className="text-xl font-bold">Sign in or create a new account to make notes</h2>
+        <h2 className="text-xl font-bold">
+          Sign in or create a new account to make notes
+        </h2>
       </div>
     );
   }
 
-
   if (!postId) {
+    // no postId means we're on the "posts" page. If there is a postId, it's the comments page.
     return (
       <div className="flex flex-col w-full min-h-screen border-x">
         <Header />
         {showNewPostEditor && <AddPost />}
+        {showSearchNoteEditor && <SearchNote />}
         <Posts />
       </div>
     );
@@ -42,7 +47,7 @@ const Feed = ({ postId }: { postId?: string }) => {
 
   // 👆 Look here 👇
 
-  return (
+  return ( 
     <div className="flex flex-col w-full min-h-screen border-x">
       <Header />
       {showNewCommentEditor && <AddComment postId={postId} />}

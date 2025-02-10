@@ -22,13 +22,17 @@ function useQueryPosts() {
   const loadPosts = async (page: number = 1, limit: number = 10) => {
     if (!user) {
       console.log("🔹 INFO: No user logged in. Skipping post fetch.");
-      setPosts([]); // ✅ Immediately clear posts if no user
+      setPosts([]); // ✅ Immediately clear posts if no user (not logged in)
       return;
     }
 
     setIsLoading(true);
     try {
-      const { data: fetchedPosts, total } = await fetchPosts(page, limit, user.username);
+      const { data: fetchedPosts, total } = await fetchPosts(
+        page,
+        limit,
+        user.username,
+      );
       setHasMorePosts(posts.length + fetchedPosts.length < total);
       if (page === 1) {
         setPosts(fetchedPosts);
