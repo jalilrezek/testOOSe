@@ -20,8 +20,16 @@ const SearchNotes = () => {
   };
 
   const findNotes = async () => {
-    // error handling or do nothing if both title & content are empty
-    //await loadPosts();
+    if (!title && !content) {
+      toast({
+        variant: "destructive",
+        title: "Please enter a title or content to search for.",
+      });
+      return;
+    }
+
+    await loadPosts(1, 10, title, content); // Pass title and content separately
+    cleanUp();
   };
 
   const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {

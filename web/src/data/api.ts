@@ -1,23 +1,54 @@
 import { API_URL } from "../env";
 import type { CommentType, PostType, UserType } from "./types";
 
-// Fetch all posts
+
 export const fetchPosts = async (
   page: number = 1,
   limit: number = 10,
   username?: string,
+  titleSearch?: string,
+  contentSearch?: string,
 ): Promise<{ data: PostType[]; total: number }> => {
-  const response = await fetch(
-    `${API_URL}/posts?sort=desc&page=${page}&limit=${limit}${username ? `&username=${username}` : ""}`,
-    { credentials: "include" },
-  );
+  // Build query parameters
+  const params = new URLSearchParams({
+    sort: "desc",
+    page: page.toString(),
+    limit: limit.toString(),
+    ...(username && { username }),
+    ...(titleSearch && { titleSearch }),
+    ...(contentSearch && { contentSearch }),
+  });
+
+  const response = await fetch(`${API_URL}/posts?${params.toString()}`, {
+    credentials: "include",
+  });
+
   if (!response.ok) {
-    throw new Error(`API request failed! with status: ${response.status}`);
+    throw new Error(`API request failed! Status: ${response.status}`);
   }
-  const { data, total }: { data: PostType[]; total: number } =
-    await response.json();
+
+  const { data, total }: { data: PostType[]; total: number } = await response.json();
   return { data, total };
 };
+
+
+// Fetch all posts
+//export const fetchPosts = async (
+ // page: number = 1,
+ // limit: number = 10,
+  //username?: string,
+//): Promise<{ data: PostType[]; total: number }> => {
+  //const response = await fetch(
+  //  `${API_URL}/posts?sort=desc&page=${page}&limit=${limit}${username ? `&username=${username}` : ""}`,
+   // { credentials: "include" },
+  //);
+  //if (!response.ok) {
+  //  throw new Error(`API request failed! with status: ${response.status}`);
+  //}
+  //const { data, total }: { data: PostType[]; total: number } =
+   // await response.json();
+ // return { data, total };
+//};
 
 // Delete a post by id
 export const deletePost = async (id: string): Promise<boolean> => {

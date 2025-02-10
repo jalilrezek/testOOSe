@@ -19,7 +19,12 @@ function useQueryPosts() {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth(); // ✅ Track authenticated user
 
-  const loadPosts = async (page: number = 1, limit: number = 10) => {
+  const loadPosts = async (
+    page: number = 1,
+    limit: number = 10,
+    titleSearch?: string,
+    contentSearch?: string,
+  ) => {
     if (!user) {
       console.log("🔹 INFO: No user logged in. Skipping post fetch.");
       setPosts([]); // ✅ Immediately clear posts if no user (not logged in)
@@ -32,6 +37,8 @@ function useQueryPosts() {
         page,
         limit,
         user.username,
+        titleSearch,
+        contentSearch,
       );
       setHasMorePosts(posts.length + fetchedPosts.length < total);
       if (page === 1) {

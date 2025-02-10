@@ -49,7 +49,8 @@ export const getCommentSchema = z.object({
 
 export const queryParamsSchema = z.object({
   sort: z.enum(["asc", "desc"]).optional(),
-  search: z.string().optional(),
+  titleSearch: z.string().optional(),
+  contentSearch: z.string().optional(),
   page: z.coerce.number().int().positive().optional(),
   limit: z.coerce.number().int().positive().optional(),
   username: z.string().optional(),

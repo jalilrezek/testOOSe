@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../db";
 import { posts, users } from "../db/schema";
-import { eq, asc, desc, like, count, SQL, and } from "drizzle-orm";
+import { eq, asc, desc, like, count, SQL, and, or } from "drizzle-orm";
 import {
   createPostSchema,
   updatePostSchema,
@@ -11,31 +11,33 @@ import {
 import { zValidator } from "@hono/zod-validator";
 import { HTTPException } from "hono/http-exception";
 import type { Context } from "../lib/context.js";
-import { authGuard } from "../middleware/auth-guard";
+import { authGuard } from "../middleware/auth-guard"; 
 
 const postRoutes = new Hono<Context>();
 
-// Get all posts with optional sorting, filtering, searching, and pagination
 postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
-  const { sort, search, page = 1, limit = 10 } = c.req.valid("query");
+  const { sort, titleSearch, contentSearch, page = 1, limit = 10 } = c.req.valid("query");
 
-  const user = c.get("user"); // Get the authenticated user
+  const user = c.get("user");
 
-  console.log("🛠️ DEBUG: User in /posts route:", user);
-
-  // If no user is authenticated, return an empty list instead of all posts
   if (!user) {
-    console.log("🔹 INFO: No authenticated user, returning empty post list.");
     return c.json({ data: [], message: "No posts available. Please log in to create and view notes." });
   }
 
-  // Build filtering conditions
-  const whereClause: (SQL | undefined)[] = [eq(posts.userId, user.id)]; // ✅ Always filter by the authenticated user's ID
-  if (search) {
-    whereClause.push(like(posts.content, `%${search}%`));
+  const whereClause = [
+    eq(posts.userId, user.id),
+  ];
+
+  // Dynamic OR filtering for title or content search
+  const searchConditions = or(
+    ...(titleSearch ? [like(posts.title, `%${titleSearch}%`)] : []),
+    ...(contentSearch ? [like(posts.content, `%${contentSearch}%`)] : [])
+  );
+
+  if (titleSearch || contentSearch) {
+    whereClause.push(searchConditions);
   }
 
-  // Sorting conditions
   const orderByClause: SQL[] = [];
   if (sort === "desc") {
     orderByClause.push(desc(posts.date));
@@ -43,10 +45,8 @@ postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
     orderByClause.push(asc(posts.date));
   }
 
-  // Pagination calculation
   const offset = (page - 1) * limit;
 
-  // Fetch posts and total count
   const [userPosts, [{ totalCount }]] = await Promise.all([
     db
       .select({
@@ -54,7 +54,7 @@ postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
         title: posts.title,
         content: posts.content,
         date: posts.date,
-        author: { // author field of the current post
+        author: {
           id: users.id,
           name: users.name,
           username: users.username,
@@ -72,8 +72,6 @@ postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
       .where(and(...whereClause)),
   ]);
 
-  console.log("📡 DEBUG: Retrieved posts for user:", user.id, userPosts);
-
   return c.json({
     data: userPosts,
     page,
@@ -81,6 +79,7 @@ postRoutes.get("/posts", zValidator("query", queryParamsSchema), async (c) => {
     total: totalCount,
   });
 });
+
 
 
 // Get a single post by id

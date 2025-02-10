@@ -54,9 +54,6 @@ const Sidebar = () => {
       >
         <HomeIcon className="w-5 h-5" />
       </Button>
-      <Button aria-label={"Search"} variant="ghost" size="icon">
-        <MagnifyingGlassIcon className="w-5 h-5" />
-      </Button>
 
       {page.route === "home" && !showSearchNote && (
         <Button
